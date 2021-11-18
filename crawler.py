@@ -34,14 +34,6 @@ def main():
             else:
                 number_one["album"] = ""
 
-            if (
-                number_one.get("album")
-                and number_one["issue_date"] > number_one["album_release_date"]
-            ):
-                number_one["preferred"] = "album"
-            else:
-                number_one["preferred"] = "single"
-
             number_ones["songs"][no] = number_one
             number_ones["_last_updated"] = number_one["issue_date"]
             save_file("hot-100.json", number_ones)
@@ -150,24 +142,6 @@ def get_single(number_one):
     for row in rows:
         if row.th and row.th.get_text().startswith("from the "):
             number_one["album"] = row.a.get_text()
-            number_one["album_link"] = row.a["href"]
-        if row.th and row.th.get_text() == "Released":
-            release_date = dateparse(next(row.td.stripped_strings)).date()
-            number_one["release_date"] = release_date
-            break
-
-
-def get_album(number_one):
-    site = f"https://en.wikipedia.org{number_one['album_link']}"
-    page = requests.get(site)
-    soup = BeautifulSoup(page.content, "html.parser")
-    rows = soup.find_all("tr")
-    for row in rows:
-        if row.th and row.th.get_text() == "Released":
-            album_release_date = dateparse(
-                next(row.td.stripped_strings)
-            ).date()
-            number_one["album_release_date"] = album_release_date
             break
 
 
