@@ -29,10 +29,6 @@ def main():
                 + f"{number_one['artist']}"
             )
             get_single(number_one)
-            if number_one.get("album"):
-                get_album(number_one)
-            else:
-                number_one["album"] = ""
 
             number_ones["songs"][no] = number_one
             number_ones["_last_updated"] = number_one["issue_date"]
@@ -43,8 +39,7 @@ def main():
     for no, number_one in number_ones["songs"].items():
         print(
             f"{no}|{number_one['issue_date']}|{number_one['song']}"
-            + f"|{number_one['artist']}|{number_one['album']}"
-            + f"|{number_one['preferred']}"
+            + f"|{number_one['artist']}|{number_one.get('album')}"
         )
 
 
@@ -128,7 +123,7 @@ def get_yearly_number_ones(year):
 
         if data["issue_date"] >= dateparse(f"{year}-12-25").date() or data[
             "issue_date"
-        ] >= datetime.now().date() + timedelta(days=1):
+        ] >= datetime.now().date() - timedelta(days=1):
             break
 
     return number_ones
